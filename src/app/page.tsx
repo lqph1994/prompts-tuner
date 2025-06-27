@@ -19,6 +19,9 @@ export default function Home() {
       try {
         const response = await fetch("/api/models");
         const data = await response.json();
+        if (!response.ok) {
+          throw new Error(data.error || "Failed to fetch models");
+        }
         setModels(data);
         if (data[provider] && data[provider].length > 0) {
           setModel(data[provider][0]);
@@ -38,8 +41,9 @@ export default function Home() {
               setModel('');
           }
         }
-      } catch (err) {
+      } catch (err: any) {
         console.error("Failed to fetch models:", err);
+        setError(err.message);
       }
     };
 
@@ -71,7 +75,7 @@ export default function Home() {
 
       setRefinedPrompts(data.refinedPrompts);
       setError(null);
-    } catch (error) {
+    } catch (error: any) {
       console.error(error);
       const errorMessage = error instanceof Error ? error.message : "An unknown error occurred";
       setError(errorMessage);

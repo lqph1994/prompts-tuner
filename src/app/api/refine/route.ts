@@ -31,6 +31,9 @@ export async function POST(request: Request) {
         const geminiModel = genAI.getGenerativeModel({ model });
         const result = await geminiModel.generateContent(`${refineInstruction}\n\nPrompt: ${prompt}`);
         const response = await result.response;
+        if (response.status === 429) {
+          return NextResponse.json({ error: 'Gemini API rate limit exceeded. Please try again later.' }, { status: 429 });
+        }
         const text = response.text().replace(/```json|```/g, '').trim();
         refinedPrompts = JSON.parse(text);
         break;

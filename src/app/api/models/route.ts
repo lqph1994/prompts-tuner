@@ -25,6 +25,9 @@ export async function GET() {
   try {
     const geminiApiKey = process.env.GEMINI_API_KEY;
     const geminiResponse = await fetch(`https://generativelanguage.googleapis.com/v1beta/models?key=${geminiApiKey}`);
+    if (geminiResponse.status === 429) {
+      return NextResponse.json({ error: 'Gemini API rate limit exceeded. Please try again later.' }, { status: 429 });
+    }
     const geminiData = await geminiResponse.json();
     if (geminiData.models && Array.isArray(geminiData.models)) {
       geminiModels = (geminiData.models as GeminiModel[])
@@ -37,7 +40,7 @@ export async function GET() {
     if (geminiModels.length === 0) {
       geminiModels.push('gemini-1.5-flash'); // Fallback to a common Gemini model
     }
-  } catch (error) {
+  } catch (error: any) {
     console.error('Error fetching Gemini models:', error);
     // Fallback for Gemini models if API call fails
     geminiModels = ['gemini-1.5-flash', 'gemini-pro'];
