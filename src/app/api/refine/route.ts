@@ -21,6 +21,7 @@ Instructions:
 
 export async function POST(request: Request) {
   const { prompt, provider, model } = await request.json();
+  console.log("Received model:", model, "for provider:", provider);
 
   let refinedPrompts: string[] = [];
 

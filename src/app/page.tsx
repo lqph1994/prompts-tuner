@@ -7,7 +7,7 @@ import { LuSparkles } from "react-icons/lu";
 export default function Home() {
   const [prompt, setPrompt] = useState("");
   const [provider, setProvider] = useState("gemini");
-  const [model, setModel] = useState("");
+  const [model, setModel] = useState("gemini-1.5-flash");
   const [models, setModels] = useState<Record<string, string[]>>({});
   const [refinedPrompts, setRefinedPrompts] = useState<string[]>([]);
   const [currentPromptIndex, setCurrentPromptIndex] = useState(0);
@@ -16,14 +16,35 @@ export default function Home() {
 
   useEffect(() => {
     const fetchModels = async () => {
-      const response = await fetch("/api/models");
-      const data = await response.json();
-      setModels(data);
-      setModel(data[provider][0]);
+      try {
+        const response = await fetch("/api/models");
+        const data = await response.json();
+        setModels(data);
+        if (data[provider] && data[provider].length > 0) {
+          setModel(data[provider][0]);
+        } else {
+          // Set a default model based on the provider if no models are returned or available
+          switch (provider) {
+            case 'gemini':
+              setModel('gemini-1.5-flash');
+              break;
+            case 'openai':
+              setModel('gpt-4o');
+              break;
+            case 'claude':
+              setModel('claude-3-opus-20240229');
+              break;
+            default:
+              setModel('');
+          }
+        }
+      } catch (err) {
+        console.error("Failed to fetch models:", err);
+      }
     };
 
     fetchModels();
-  }, [provider]);
+  }, [provider]); // Fetch models and set default model when provider changes
 
   const handleSubmit = async (e: React.FormEvent<HTMLFormElement>) => {
     e.preventDefault();
@@ -40,6 +61,7 @@ export default function Home() {
         },
         body: JSON.stringify({ prompt, provider, model }),
       });
+    
 
       const data = await response.json();
 
@@ -65,9 +87,7 @@ export default function Home() {
   return (
     <main className="flex min-h-screen flex-col items-center justify-center p-24 bg-gray-50 dark:bg-gray-900">
       <div className="w-full max-w-2xl">
-        <h1 className="text-4xl font-bold text-center text-gray-800 dark:text-white mb-8">
-          Prompts Tuner
-        </h1>
+        
         <form onSubmit={handleSubmit} className="bg-white dark:bg-gray-800 shadow-md rounded-lg p-8">
           <div className="mb-6">
             <label htmlFor="prompt" className="block text-gray-700 dark:text-gray-300 text-sm font-bold mb-2">
@@ -101,6 +121,7 @@ export default function Home() {
               <label htmlFor="model" className="block text-gray-700 dark:text-gray-300 text-sm font-bold mb-2">
                 Select Model
               </label>
+              {console.log("Models state:", models, "Current provider models:", models[provider])}
               <select
                 id="model"
                 value={model}
