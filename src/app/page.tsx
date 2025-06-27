@@ -43,7 +43,11 @@ export default function Home() {
         }
       } catch (err: any) {
         console.error("Failed to fetch models:", err);
-        setError(err.message);
+        if (err.message.includes("rate limit exceeded") || err.message.includes("quota")) {
+          setError("API rate limit exceeded. Please try again later or check your API plan.");
+        } else {
+          setError(err.message);
+        }
       }
     };
 
@@ -77,8 +81,11 @@ export default function Home() {
       setError(null);
     } catch (error: any) {
       console.error(error);
-      const errorMessage = error instanceof Error ? error.message : "An unknown error occurred";
-      setError(errorMessage);
+      if (error.message.includes("rate limit exceeded") || error.message.includes("quota")) {
+        setError("API rate limit exceeded. Please try again later or check your API plan.");
+      } else {
+        setError(error.message);
+      }
     } finally {
       setIsLoading(false);
     }
