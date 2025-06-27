@@ -1,8 +1,59 @@
-This is a [Next.js](https://nextjs.org) project bootstrapped with [`create-next-app`](https://nextjs.org/docs/app/api-reference/cli/create-next-app).
+# Prompts Tuner
 
-## Getting Started
+Prompts Tuner is a Next.js application designed to help users refine and improve their prompts for various large language models (LLMs). It allows you to input an initial prompt and receive three distinct variations: an improved version, a creative alternative, and a "red team" prompt designed to test the model's boundaries.
 
-First, run the development server:
+## Capabilities
+
+- **Prompt Refinement:** Get expertly refined versions of your original prompts.
+- **Creative Alternatives:** Explore different angles and creative interpretations of your prompt's intent.
+- **Red Team Prompts:** Generate challenging prompts to test LLM biases, ethical boundaries, and unexpected behaviors.
+- **Multi-Provider Support:** Seamlessly switch between different LLM providers (Gemini, OpenAI, Claude) and their available models.
+- **Easy Copying:** Quickly copy refined prompts to your clipboard for immediate use.
+- **Intuitive UI:** A clean and user-friendly interface for an efficient prompt tuning experience.
+
+## Setup Instructions
+
+Follow these steps to get the Prompts Tuner application up and running on your local machine.
+
+### Prerequisites
+
+- Node.js (version 18 or higher recommended)
+- npm, yarn, pnpm, or bun
+
+### 1. Clone the Repository
+
+```bash
+git clone https://github.com/your-username/prompts-tuner.git
+cd prompts-tuner
+```
+
+### 2. Install Dependencies
+
+Choose your preferred package manager:
+
+```bash
+npm install
+# or
+yarn install
+# or
+pnpm install
+# or
+bun install
+```
+
+### 3. Configure API Keys
+
+This application requires API keys for the LLM providers you wish to use. Create a `.env.local` file in the root of the project and add your API keys:
+
+```
+OPENAI_API_KEY=your_openai_api_key_here
+GEMINI_API_KEY=your_gemini_api_key_here
+CLAUDE_API_KEY=your_claude_api_key_here
+```
+
+Replace `your_openai_api_key_here`, `your_gemini_api_key_here`, and `your_claude_api_key_here` with your actual API keys.
+
+### 4. Run the Development Server
 
 ```bash
 npm run dev
@@ -16,9 +67,7 @@ bun dev
 
 Open [http://localhost:3000](http://localhost:3000) with your browser to see the result.
 
-You can start editing the page by modifying `app/page.tsx`. The page auto-updates as you edit the file.
-
-This project uses [`next/font`](https://nextjs.org/docs/app/building-your-application/optimizing/fonts) to automatically optimize and load [Geist](https://vercel.com/font), a new font family for Vercel.
+The page auto-updates as you edit the file.
 
 ## Learn More
 
