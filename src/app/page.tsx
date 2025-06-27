@@ -5,7 +5,12 @@ import { FaRegCopy, FaSyncAlt } from "react-icons/fa";
 import { LuSparkles } from "react-icons/lu";
 
 export default function Home() {
-  const [prompt, setPrompt] = useState("");
+  const [prompt, setPrompt] = useState(() => {
+    if (typeof window !== 'undefined') {
+      return localStorage.getItem('lastPrompt') || '';
+    }
+    return '';
+  });
   const [provider, setProvider] = useState("gemini");
   const [model, setModel] = useState("gemini-1.5-flash");
   const [models, setModels] = useState<Record<string, string[]>>({});
@@ -13,6 +18,10 @@ export default function Home() {
   const [currentPromptIndex, setCurrentPromptIndex] = useState(0);
   const [isLoading, setIsLoading] = useState(false);
   const [error, setError] = useState<string | null>(null);
+
+  useEffect(() => {
+    localStorage.setItem('lastPrompt', prompt);
+  }, [prompt]);
 
   useEffect(() => {
     const fetchModels = async () => {
